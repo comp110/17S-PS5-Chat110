@@ -1,4 +1,4 @@
-package comp110.chat.support;
+package comp110.chat.packets;
 
 /**
  * ConnectionObservers can be registered with a Connection via a Connection's addObserver method. Once registered, the

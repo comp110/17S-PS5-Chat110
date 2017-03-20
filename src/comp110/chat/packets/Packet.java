@@ -1,4 +1,4 @@
-package comp110.chat.support;
+package comp110.chat.packets;
 
 /**
  * A Packet represents a single bundle of information sent to or from the server.
@@ -79,10 +79,10 @@ public class Packet {
     }
 
     /**
-     * The number of chunks in a Packet as separated by colons.
+     * The number of parameters in a Packet. Does not include the type.
      */
     public int size() {
-        return _chunks.length;
+        return _chunks.length - 1;
     }
 
     /**

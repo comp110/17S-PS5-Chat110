@@ -1,4 +1,4 @@
-package comp110.chat.support;
+package comp110.chat.packets;
 
 import java.io.IOException;
 import java.net.URI;
@@ -38,12 +38,31 @@ public class Connection extends Endpoint {
     private List<ConnectionObserver> _observers;
 
     /**
+     * Keep track of whether or not this connection is working in conjunction with a JavaFX GUI toolkit. This is kind of
+     * an ugly hack to avoid complicating student code with threading concerns.
+     */
+    private boolean _javaFX;
+
+    /**
      * Constructing a new Connection object does not connect upon construction. This allows any PacketObservers to be
      * registered before messages begin coming in.
      */
     public Connection() {
         super();
         _observers = new ArrayList<ConnectionObserver>();
+        _javaFX = true; // This constructor is used by the Client which assumes JavaFX.
+    }
+
+    /**
+     * Construct a new Connection that is preassigned a Session. This is used by the Server.
+     * 
+     * @param session
+     */
+    public Connection(Session session) {
+        this();
+        _session = session;
+        _session.addMessageHandler(String.class, this::receive);
+        _javaFX = false; // This constructor is used by the Server which does not assume JavaFX.
     }
 
     /**
@@ -58,6 +77,28 @@ public class Connection extends Endpoint {
      */
     public void removeObserver(ConnectionObserver observer) {
         _observers.remove(observer);
+    }
+
+    /**
+     * Indicate whether this Connection will interop with a JavaFX GUI application.
+     */
+    public void setJavaFX(boolean javaFX) {
+        _javaFX = javaFX;
+    }
+
+    /**
+     * Close the session.
+     */
+    public void close() {
+        try {
+            if (_session != null) {
+                _session.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            _session = null;
+        }
     }
 
     /**
@@ -118,15 +159,19 @@ public class Connection extends Endpoint {
     private void receive(String data) {
         Packet packet = new Packet(data);
         for (ConnectionObserver observer : _observers) {
-            // This Platform.runLater business is tricky business. To understand *why* it is needed takes some 401
-            // knowledge about threads.
-            Platform.runLater(() -> observer.packetReceived(packet));
+            if (_javaFX) {
+                // This Platform.runLater business is tricky business. To understand *why* it is needed takes some 401
+                // knowledge about threads.
+                Platform.runLater(() -> observer.packetReceived(packet));
+            } else {
+                observer.packetReceived(packet);
+            }
         }
     }
 
     /**
-     * This method is a noop short for "no operation" - It does nothing and is not used. It only exists because it is
-     * declared abstract on the Endpoint class. You can learn all about abstract methods in 401 :)
+     * This method is a noop - This method only exists because it is declared abstract on the Endpoint class. You can
+     * learn all about abstract methods in 401 :)
      * 
      * This method is called when the connection to the server actually opens up.
      * 
