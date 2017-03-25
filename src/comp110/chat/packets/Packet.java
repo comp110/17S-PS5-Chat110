@@ -3,8 +3,8 @@ package comp110.chat.packets;
 /**
  * A Packet represents a single bundle of information sent to or from the server.
  * 
- * The Chat110 protocol is simplistic for illustrative purposes. Each packet is a colon-delimited beginning with the
- * type of packet it is and followed by one or more depending on its type.
+ * The Chat110 protocol is simplistic for illustrative purposes. Each packet is a colon-delimited String beginning with
+ * the type of packet it is and followed by one or more depending on its type.
  * 
  * type:param:param:param
  * 
@@ -14,7 +14,9 @@ package comp110.chat.packets;
  * 
  * dm:onyen:message
  * 
- * status:onyen,onyen,onyen
+ * who
+ * 
+ * status:onyen:onyen:onyen
  * 
  * We are providing the implementation of this class, because it is fairly boring. You should familiarize yourself with
  * its constructor and methods. Notice it makes use of the split method of the String class which is very similar to the
@@ -46,8 +48,18 @@ public class Packet {
     }
 
     /**
-     * The Packet's chunks which follow the type chunk are considered "parameters" to a packet. This convenience method
+     * The size method will tell you how many parameters a Packet has.
+     */
+    public int size() {
+        return _chunks.length - 1;
+    }
+
+    /**
+     * The chunks which follow the first type chunk are considered "parameters" to a packet. This convenience method
      * allows you to ask a packet for a parameter at a specific index.
+     * 
+     * Notice there is no check as to whether this parameter exists. In your code, you'll need to be careful to check
+     * the size of a Packet (above) before asking for a given parameter.
      * 
      * @param n
      */
@@ -76,13 +88,6 @@ public class Packet {
             }
         }
         return result;
-    }
-
-    /**
-     * The number of parameters in a Packet. Does not include the type.
-     */
-    public int size() {
-        return _chunks.length - 1;
     }
 
     /**

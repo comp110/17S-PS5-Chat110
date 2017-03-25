@@ -6,6 +6,7 @@
 			<accessrule kind="accessible" pattern="javafx/**"/>
 			<accessrule kind="nonaccessible" pattern="java/awt/**"/>
 			<accessrule kind="nonaccessible" pattern="javax/swing/**"/>
+			<accessrule kind="nonaccessible" pattern="com/sun/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="lib" path="vendor/tyrus-standalone-client-1.13.1.jar"/>
