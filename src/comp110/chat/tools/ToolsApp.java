@@ -32,7 +32,7 @@ public class ToolsApp extends Application {
 
         // TODO: Construct a PacketToolWindow
 
-        // TODO: Construct a MessageToolWindow
+        // TODO: Send an auth packet to automatically authenticate on startup
 
     }
 

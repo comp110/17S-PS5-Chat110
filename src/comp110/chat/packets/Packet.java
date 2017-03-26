@@ -16,8 +16,6 @@ package comp110.chat.packets;
  * 
  * who
  * 
- * status:onyen:onyen:onyen
- * 
  * We are providing the implementation of this class, because it is fairly boring. You should familiarize yourself with
  * its constructor and methods. Notice it makes use of the split method of the String class which is very similar to the
  * split method you may have implemented in SillyString.
@@ -80,7 +78,7 @@ public class Packet {
      */
     public String join(int n) {
         String result = null;
-        for (int i = n; i < _chunks.length; i++) {
+        for (int i = n + 1; i < _chunks.length; i++) {
             if (result == null) {
                 result = _chunks[i];
             } else {
